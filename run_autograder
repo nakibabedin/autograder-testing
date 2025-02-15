@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+# Set up autograder directories
+SUBMISSION_DIRECTORY="/autograder/submission/"
+AUTOGRADER_BASE="/autograder/source/base"
+EXECUTION_DIRECTORY="$AUTOGRADER_BASE/execution/"
+PY_TEST_DIRECTORY="$AUTOGRADER_BASE/py_tests"
+
+SANDBOX_DIRECTORY="$EXECUTION_DIRECTORY/submission_module/"
+
+# Update autograder files
+cd "$AUTOGRADER_BASE" 
+git pull 
+
+# Copy submitted files
+cd "$SUBMISSION_DIRECTORY"
+
+# CLASSES=("OBJ1" "OBJ2")
+# ENDINGS=(".cpp" ".hpp")
+
+# for class in "${CLASSES[@]}"; do
+#     for ending in "${ENDINGS[@]}"; do
+#         # Find the class & copy to the pieces directory. 
+#         # Chooses the last file matching the wildcard
+#         echo "${class}${ending}"
+#         find "$SUBMISSION_DIRECTORY" -type f -name "*${class}${ending}" -exec cp {} "${SANDBOX_DIRECTORY}${class}${ending}" \;
+#     done
+# done
+
+cd "$EXECUTION_DIRECTORY"
+
+make mainprog
+
+cd "$PY_TEST_DIRECTORY"
+
+python3 run_tests.py > /autograder/results/results.json
+
+cd "$EXECUTION_DIRECTORY"
+
+make clean
